@@ -17,16 +17,25 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <groupId>org.jboss.aerogear.unifiedpush</groupId>
-        <artifactId>unifiedpush-parent</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>24</version>
     </parent>
 
-    <artifactId>unifiedpush-admin-ui</artifactId>
+    <groupId>org.aerogear.unifiedpush</groupId>
+    <artifactId>admin-ui</artifactId>
+    <version>1.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>UnifiedPush Admin UI</name>
+
+    <scm>
+        <connection>scm:git:git://github.com/aerogear/unifiedpush-admin-ui.git</connection>
+        <developerConnection>scm:git:git@github.com:aerogear/unifiedpush-admin-ui.git</developerConnection>
+        <url>https://github.com/aerogear/unifiedpush-admin-ui</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
 
@@ -147,5 +156,15 @@
             </build>
         </profile>
     </profiles>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
 </project>
