@@ -1,6 +1,7 @@
-language: node_js
-node_js:
-  - '4.2.2'
-before_script:
-  - 'npm install -g bower@~1.3.8 grunt-cli'
-  - 'bower install'
+language: java
+
+jdk:
+  - oraclejdk8
+notifications:
+  irc: "irc.freenode.org#aerogear"
+  
