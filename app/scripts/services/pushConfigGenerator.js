@@ -5,12 +5,7 @@ var upsServices = angular.module('upsConsole');
 upsServices.factory('pushConfigGenerator', function ($resource, $q, ContextProvider) {
 
 	function cordovaVariantType(variant) {
-		switch (variant.type) {
-		case 'windows_mpns':
-			return 'windows';
-		default:
 			return variant.type;
-		}
 	}
 
 	function variantSpecificConfiguration(variant, config) {

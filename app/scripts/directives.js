@@ -148,9 +148,7 @@ angular.module('upsConsole')
         $scope.typeEnum = {
           android:      { name: 'Android',    snippets: ['android', 'cordova', 'titanium', 'push_config'] },
           ios:          { name: 'iOS',        snippets: ['ios_objc', 'ios_swift', 'cordova', 'titanium', 'push_config']},
-          windows_mpns: { name: 'Windows',    snippets: ['dotnet', 'cordova', 'push_config'] },
           windows_wns:  { name: 'Windows',    snippets: ['dotnet', 'cordova', 'push_config'] },
-          simplePush:   { name: 'SimplePush', snippets: ['cordova', 'push_config'] },
           adm:          { name: 'ADM',        snippets: ['adm'] }
         };
         $scope.state = {
@@ -176,12 +174,7 @@ angular.module('upsConsole')
           }, 1000);
         };
         $scope.cordovaVariantType = (function() {
-          switch ($scope.variant.type) {
-          case 'windows_mpns':
-            return 'windows';
-          default:
             return $scope.variant.type;
-          }
         })();
         $scope.senderID = $scope.variant.type === 'android' ? $scope.variant.projectNumber : null;
         $scope.$watch('variant.secret', function() {
