@@ -6,22 +6,26 @@ import android.app.Application;
 import org.jboss.aerogear.android.core.Callback;
 import org.jboss.aerogear.android.unifiedpush.PushRegistrar;
 import org.jboss.aerogear.android.unifiedpush.RegistrarManager;
-import org.jboss.aerogear.android.unifiedpush.gcm.AeroGearGCMPushConfiguration;
+import org.jboss.aerogear.android.unifiedpush.fcm.AeroGearFCMPushConfiguration;
+
+import java.net.URI;
 
 public class PushApplication extends Application {
 
     private final String VARIANT_ID       = "{{ variant.variantID }}";
     private final String SECRET           = "{{ variant.secret }}";
-    private final String GCM_SENDER_ID    = {{ variant.projectNumber ? '"' + variant.projectNumber + '";': '""; // getString(R.string.gcm_defaultSenderId)'}}
+    private final String FCM_SENDER_ID    = {{ variant.projectNumber ? '"' + variant.projectNumber + '";': '""; // getString(R.string.gcm_defaultSenderId)'}}
     private final String UNIFIED_PUSH_URL = "{{ contextPath }}";
+
+    private final String TAG = "ups";
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        RegistrarManager.config("register", AeroGearGCMPushConfiguration.class)
+        RegistrarManager.config("register", AeroGearFCMPushConfiguration.class)
                     .setPushServerURI(URI.create(UNIFIED_PUSH_URL))
-                    .setSenderIds(GCM_SENDER_ID)
+                    .setSenderId(FCM_SENDER_ID)
                     .setVariantID(VARIANT_ID)
                     .setSecret(SECRET)
                     .asRegistrar();
