@@ -12,6 +12,7 @@
     auth.loggedIn = false;
 
     keycloak.init({ onLoad: 'login-required' }).success(function () {
+      window.alert('dam');
       auth.loggedIn = true;
       auth.keycloak = keycloak;
       auth.logout = function() {

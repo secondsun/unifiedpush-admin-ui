@@ -26,7 +26,7 @@ angular.module('upsConsole')
 
     //Retrieve the current logged in username
     function getUsername() {
-      return Auth.keycloak.idTokenParsed.preferred_username;
+      return 'admin-hack';
     }
     this.username = getUsername();
     $scope.$watch(getUsername, function( newValue ) {
@@ -39,7 +39,7 @@ angular.module('upsConsole')
     };
 
     this.goToAccountManagement = function() {
-      window.location = Auth.keycloak.authServerUrl + '/realms/' + Auth.keycloak.realm + '/account?referrer=unified-push-server-js';
+      //window.location = Auth.keycloak.authServerUrl + '/realms/' + Auth.keycloak.realm + '/account?referrer=unified-push-server-js';
     };
 
     this.havePendingRequests = function() {
