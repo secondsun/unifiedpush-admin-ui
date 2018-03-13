@@ -37,7 +37,6 @@
 </head>
 <body class="app-dashboard" ng-controller="AppController as app">
 
-
 <div class="ups-main-warning ng-cloak">
   <div ng-repeat="notification in notifications.data" data-ng-show="notifications.data.length > 0">
     <div class="alert alert-{{notification.type}} alert-dismissable" ng-click="notifications.remove($index)" style="margin-bottom:1em">
@@ -191,6 +190,11 @@
 <script src="scripts/endpoints/dashboardEndpoint.js"></script>
 <script src="scripts/endpoints/importerEndpoint.js"></script>
 <script src="scripts/endpoints/exporterEndpoint.js"></script>
+
+<!-- Start the admin angular app -->
+<script>
+    angular.bootstrap(document, ['upsConsole']);
+</script>
 <!-- endbuild -->
 
 <!-- build:js({.tmp,app}) scripts/keycloak-init.js -->
@@ -198,8 +202,5 @@
 
 <!-- build:js scripts/templates.js -->
 <!-- endbuild -->
-
-
-
 </body>
 </html>

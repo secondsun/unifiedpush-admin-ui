@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('upsConsole')
-  .controller('AppController', function ( $rootScope, $scope, Auth, $http, $interval, $timeout, $log, appConfig, dashboardEndpoint, $$rootRouter ) {
+  .controller('AppController', function ( $rootScope, $scope, $http, $interval, $timeout, $log, appConfig, dashboardEndpoint, $$rootRouter ) {
 
     var self = this;
 
@@ -33,14 +33,6 @@ angular.module('upsConsole')
       self.username = newValue;
       $$rootRouter.navigate('/');
     });
-
-    this.logout = function() {
-      Auth.logout();
-    };
-
-    this.goToAccountManagement = function() {
-      //window.location = Auth.keycloak.authServerUrl + '/realms/' + Auth.keycloak.realm + '/account?referrer=unified-push-server-js';
-    };
 
     this.havePendingRequests = function() {
       return $http.pendingRequests.some(function(config) {
