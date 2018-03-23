@@ -191,13 +191,10 @@
 <script src="scripts/endpoints/importerEndpoint.js"></script>
 <script src="scripts/endpoints/exporterEndpoint.js"></script>
 
-<!-- Start the admin angular app -->
-<script>
-    angular.bootstrap(document, ['upsConsole']);
-</script>
 <!-- endbuild -->
 
-<!-- build:js({.tmp,app}) scripts/keycloak-init.js -->
+<!-- build:js({.tmp,app}) scripts/noauth-init.js -->
+<script src="scripts/noauth-init.js"></script>
 <!-- endbuild -->
 
 <!-- build:js scripts/templates.js -->
