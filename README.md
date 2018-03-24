@@ -102,6 +102,14 @@ In order to create a WAR application, go into `../server/` folder and run Maven 
     mvn clean install
     
 
+### Maven Central release
+
+In order to release to oss.sonartype.com, you need to have a valid account. For releases we use the maven-release-plugin through the jboss-parent POM file. Execute the following steps:
+
+     mvn release:prepare -Dgpg.useagent=true -Darguments=-Dgpg.passphrase=MY_SECRET_PHRASE -Pgpg-sign
+     mvn release:perform -Dgpg.useagent=true -Darguments=-Dgpg.passphrase=MY_SECRET_PHRASE -Pgpg-sign
+
+
 ### Cleaning the Admin UI build
 
 For sake of quick development turnaround, the `$ mvn clean` will clean just `dist/` and `.tmp/` build directories, but some frontend build related directories will be still cached (`node/`, `node_modules/`, `app/bower_components/`, `.build-tmp`). In order to clean all build related caches, execute:
