@@ -6,9 +6,13 @@
    */
   var auth = {};
   var app = angular.module('upsConsole');
+  var AUTH_CONFIG_PATH = 'rest/auth/config';
 
   function initKeycloak() {
-    var keycloak = new Keycloak('rest/keycloak/config');
+    // Ideally we would use the config object retrieved by the fetch call
+    // This should work and is described in the keycloak.js documentation
+    // but triggers an error here. Possibly a bug in keycloak.js
+    var keycloak = new Keycloak(AUTH_CONFIG_PATH);
     auth.loggedIn = false;
     keycloak.init({onLoad: 'login-required'}).success(function () {
       auth.loggedIn = true;
@@ -37,6 +41,8 @@
         request: function (config) {
           var deferred = $q.defer();
 
+          // Those endpoints are never protected on the server regardless of the
+          // auth library in use
           if (config.url === 'rest/sender' || config.url === 'rest/registry/device/importer') {
             return config;
           }
@@ -62,7 +68,7 @@
   }
 
   angular.element(document).ready(function () {
-    fetch('rest/keycloak/config').then(function (response) {
+    fetch(AUTH_CONFIG_PATH).then(function (response) {
       return response.json();
     }).then(function (config) {
       if (config['auth-enabled']) {
