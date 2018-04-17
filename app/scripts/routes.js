@@ -12,6 +12,7 @@ angular.module('upsConsole')
       {path: '/wizard/send-push-notification',  component: 'wizard04SendPushNotification'},
       {path: '/wizard/setup-sender',  component: 'wizard05SetupSender'},
       {path: '/wizard/done',          component: 'wizard06Done'},
+      {path: '/app/:app/:tab/:variant', component: 'appDetail'},
       {path: '/app/:app/:tab',        component: 'appDetail'},
       {path: '/links-check',          component: 'linksCheck'},
     ]);
