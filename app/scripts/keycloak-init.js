@@ -6,15 +6,18 @@
    */
   var auth = {};
   var app = angular.module('upsConsole');
+  var AUTH_CONFIG_PATH = 'rest/auth/config';
 
-  angular.element(document).ready(function () {
-    var keycloak = new Keycloak('rest/keycloak/config');
+  function initKeycloak() {
+    // Ideally we would use the config object retrieved by the fetch call
+    // This should work and is described in the keycloak.js documentation
+    // but triggers an error here. Possibly a bug in keycloak.js
+    var keycloak = new Keycloak(AUTH_CONFIG_PATH);
     auth.loggedIn = false;
-
-    keycloak.init({ onLoad: 'login-required' }).success(function () {
+    keycloak.init({onLoad: 'login-required'}).success(function () {
       auth.loggedIn = true;
       auth.keycloak = keycloak;
-      auth.logout = function() {
+      auth.logout = function () {
         auth.loggedIn = false;
         auth.keycloak = null;
         window.location = keycloak.createLogoutUrl();
@@ -26,39 +29,63 @@
     }).error(function () {
       window.location.reload();
     });
+  }
 
-  });
+  function configureAuth() {
+    app.factory('Auth', function () {
+      return auth;
+    });
 
-  app.factory('Auth', function () {
-    return auth;
-  });
+    app.factory('authInterceptor', function ($q, Auth) {
+      return {
+        request: function (config) {
+          var deferred = $q.defer();
 
-  app.factory('authInterceptor', function ($q, Auth) {
-    return {
-      request: function (config) {
-        var deferred = $q.defer();
+          // Those endpoints are never protected on the server regardless of the
+          // auth library in use
+          if (config.url === 'rest/sender' || config.url === 'rest/registry/device/importer') {
+            return config;
+          }
 
-        if (config.url === 'rest/sender' || config.url === 'rest/registry/device/importer') {
-          return config;
+          if (Auth.keycloak && Auth.keycloak.token) {
+            Auth.keycloak.updateToken(5).success(function () {
+              config.headers = config.headers || {};
+              config.headers.Authorization = 'Bearer ' + Auth.keycloak.token;
+
+              deferred.resolve(config);
+            }).error(function () {
+              window.location.reload();
+            });
+          }
+          return deferred.promise;
         }
+      };
+    });
 
-        if (Auth.keycloak && Auth.keycloak.token) {
-          Auth.keycloak.updateToken(5).success(function () {
-            config.headers = config.headers || {};
-            config.headers.Authorization = 'Bearer ' + Auth.keycloak.token;
+    app.config(function ($httpProvider) {
+      $httpProvider.interceptors.push('authInterceptor');
+    });
+  }
 
-            deferred.resolve(config);
-          }).error(function () {
-            window.location.reload();
-          });
-        }
-        return deferred.promise;
+  angular.element(document).ready(function () {
+    fetch(AUTH_CONFIG_PATH).then(function (response) {
+      return response.json();
+    }).then(function (config) {
+      if (config['auth-enabled']) {
+        initKeycloak();
+        configureAuth();
+      } else {
+        // Auth disabled on the server
+        // Default to logged in and do nothing on logout
+        app.factory('Auth', function () {
+          auth.loggedIn = true;
+          auth.logout = function () {
+          };
+          return auth;
+        });
+
+        angular.bootstrap(document, ['upsConsole']);
       }
-    };
+    });
   });
-
-  app.config(function ($httpProvider) {
-    $httpProvider.interceptors.push('authInterceptor');
-  });
-
 })();

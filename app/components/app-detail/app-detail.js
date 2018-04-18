@@ -1,78 +1,87 @@
 angular.module('upsConsole')
-  .controller('AppDetailController', function( $rootScope, $q, $routeParams, $modal, applicationsEndpoint, messageSenderEndpoint, metricsEndpoint, ContextProvider, Notifications ) {
+  .controller('AppDetailController', function ($rootScope, $q, $routeParams, $modal, applicationsEndpoint, messageSenderEndpoint, metricsEndpoint, ContextProvider, Notifications) {
 
     var self = this;
 
     this.app = null; // is retrieved in canActivate
     this.notifications = null; // is retrieved in canActivate
     this.tab = $routeParams.tab;
+    this.selectedVariant = $routeParams.variant;
 
     this.contextPath = ContextProvider.contextPath();
 
-    this.canActivate = function() {
+    this.canActivate = function () {
       return $q.all([
         applicationsEndpoint.getWithMetrics({appId: $routeParams.app})
-          .then(function( app ) {
+          .then(function (app) {
+
+            // Expand the variant if an ID is passed in the URL
+            if (self.selectedVariant && app.variants) {
+              app.variants.forEach(function (variant) {
+                variant.$toggled = self.selectedVariant === variant.variantID;
+              });
+            }
+
             self.app = app;
-            if ( !app.variants.length ) {
+            if (!app.variants.length) {
               self.tab = 'variants';
             }
           }),
         metricsEndpoint.fetchApplicationMetrics($routeParams.app, null, 1)
-          .then(function( data ) {
+          .then(function (data) {
             self.notifications = data.pushMetrics;
           })
       ]);
     };
 
-    this.sendNotification = function() {
+    this.sendNotification = function () {
       $modal.open({
         templateUrl: 'dialogs/send-push-notification.html',
-        controller: function( $scope, $modalInstance ) {
+        controller: function ($scope, $modalInstance) {
 
           $scope.app = self.app;
 
           // default message
           $scope.pushData = {
-            
+
             'message': {
               'sound': 'default',
               'alert': '',
-              'priority':'normal',
+              'priority': 'normal',
               'simple-push': 'version=' + new Date().getTime()
             },
-            'criteria' : {}
+            'criteria': {}
           };
 
-          $scope.send = function() {
+          $scope.send = function () {
             if ($scope.selectedVariants && $scope.selectedVariants.length > 0) {
               $scope.pushData.criteria.variants = $scope.selectedVariants;
             }
-            if($scope.aliases) {
+            if ($scope.aliases) {
               $scope.pushData.criteria.alias = $scope.aliases.split(',');
             }
-            if($scope.deviceTypes) {
+            if ($scope.deviceTypes) {
               $scope.pushData.criteria.deviceType = $scope.deviceTypes.split(',');
             }
-            if($scope.categories) {
+            if ($scope.categories) {
               $scope.pushData.criteria.categories = $scope.categories.split(',');
             }
 
-            messageSenderEndpoint( self.app.pushApplicationID, self.app.masterSecret )
+            messageSenderEndpoint(self.app.pushApplicationID, self.app.masterSecret)
               .send({}, $scope.pushData)
-              .then(function() {
+              .then(function () {
                 self.app.$messageCount += 1;
-                self.notifications.unshift({ submitDate: new Date().getTime() });
+                self.notifications.unshift({submitDate: new Date().getTime()});
                 $modalInstance.close();
                 $rootScope.$broadcast('upsNotificationSent', $scope.pushData, $scope.app);
                 Notifications.success('Notification was successfully sent');
               })
-              .catch(function() {
+              .catch(function () {
                 Notifications.error('Failed to sent notification');
               });
           };
 
-          $scope.cancel = function() {
+          $scope.cancel = function () {
             $modalInstance.dismiss();
           };
         }

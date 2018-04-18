@@ -17,7 +17,7 @@
 'use strict';
 
 angular.module('upsConsole')
-  .controller('AppController', function ( $rootScope, $scope, Auth, $http, $interval, $timeout, $log, appConfig, dashboardEndpoint, $$rootRouter ) {
+  .controller('AppController', function ( $rootScope, $scope, $location, Auth, $http, $interval, $timeout, $log, appConfig, dashboardEndpoint, $$rootRouter ) {
 
     var self = this;
 
@@ -26,12 +26,21 @@ angular.module('upsConsole')
 
     //Retrieve the current logged in username
     function getUsername() {
-      return Auth.keycloak.idTokenParsed.preferred_username;
+      if (Auth && Auth.keycloak) {
+        $rootScope.showUserDropdown = true;
+        return Auth.keycloak.idTokenParsed.preferred_username;
+      } else {
+        $rootScope.showUserDropdown = false;
+        return 'dummy';
+      }
     }
+
     this.username = getUsername();
     $scope.$watch(getUsername, function( newValue ) {
       self.username = newValue;
-      $$rootRouter.navigate('/');
+      // After the user is resolved, redirect to the URL passed
+      // to the browser
+      $$rootRouter.navigate($location.url());
     });
 
     this.logout = function() {
