@@ -61,22 +61,7 @@
       </div>
     </div>
 
-    <div class="form-group" ng-if="isNew && allowCreate('adm')">
-      <label class="col-sm-3 control-label sr-only" for="optionsAdm">ADM</label>
-      <div class="col-sm-9">
-        <div class="radio">
-          <label>
-            <input type="radio" name="variantType" id="optionsAdm" value="adm" ng-model="variant.type" ng-required="true">
-                <span class="ups-has-icon ups-variant-adm">
-                  <strong>ADM (experimental)</strong><br>
-                  using Amazon Push Network
-                </span>
-          </label>
-        </div>
-      </div>
-    </div>
     <div ng-show="variant.type">
-
       <div ng-show="variant.type == 'android'">
         <div class="form-group">
           <label class="col-sm-3 control-label" for="fcmApiKey">Push Network</label>
@@ -148,23 +133,6 @@
           </div>
         </div>
       </div>
-
-      <div ng-show="variant.type == 'adm'">
-        <div class="form-group">
-          <label class="col-sm-3 control-label" for="admClientId">Push Network</label>
-          <div class="col-sm-7">Client ID<br>
-            <input type="text" placeholder="e.g. 5a448c2f31700a466fbc9d33d33942b043a27596" id="admClientId" class="form-control" ng-model="variant.clientId" ng-required="variant.type == 'adm'">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 control-label" for="admclientSecret"></label>
-          <div class="col-sm-7">
-            Client Secret<br>
-            <input type="text" placeholder="e.g. 5da448c2f31700a466fbc9d33d33942b043a27596" id="admclientSecret" class="form-control" ng-model="variant.clientSecret" ng-required="variant.type == 'adm'">
-          </div>
-        </div>
-      </div>
-
     </div>
 
   </div>
