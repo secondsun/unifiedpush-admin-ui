@@ -1,4 +1,5 @@
 {
+  "registry": "https://registry.bower.io",
   "directory": "app/bower_components",
   "storage": {
     "packages": ".build-tmp/bower-cache",
