@@ -39,7 +39,7 @@ public class PushApplication extends Application {
 
             @Override
             public void onFailure(Exception e) {
-                Log.e(TAG, exception.getMessage(), exception);
+                Log.e(TAG, e.getMessage(), e);
             }
         });
 
