@@ -148,13 +148,6 @@ angular.module('upsConsole').factory('variantModal', function ($modal, $q, varia
         formData.append(property, variant[property] === undefined ? '' : variant[property]);
       });
       return formData;
-    case 'windows_wns':
-      result.protocolType = 'wns';
-      properties = properties.concat(['sid', 'clientSecret']);
-      break;
-    case 'adm':
-      properties = properties.concat(['clientId', 'clientSecret']);
-      break;
     default:
       throw 'Unknown variant type ' + variant.type;
     }
