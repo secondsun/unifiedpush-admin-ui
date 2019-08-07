@@ -45,22 +45,6 @@
       </div>
     </div>
 
-
-    <div class="form-group" ng-if="isNew && allowCreate('windows_wns')">
-      <label class="col-sm-3 control-label sr-only" for="optionWindowsWns">Windows</label>
-      <div class="col-sm-9">
-        <div class="radio">
-          <label>
-            <input type="radio" name="variantType" id="optionWindowsWns" value="windows_wns" ng-model="variant.type" ng-required="true">
-                <span class="ups-has-icon ups-variant-windows">
-                  <strong>Windows/WNS</strong><br>
-                  using Windows Push Notification Services (WNS)
-                </span>
-          </label>
-        </div>
-      </div>
-    </div>
-
     <div ng-show="variant.type">
       <div ng-show="variant.type == 'android'">
         <div class="form-group">
@@ -118,22 +102,6 @@
           </div>
         </div>
       </div>
-
-      <div ng-show="variant.type == 'windows_wns'">
-        <div class="form-group">
-          <label class="col-sm-3 control-label" for="sid">Push Network</label>
-          <div class="col-sm-7"><em>Package SID</em><br>
-            <input type="text" placeholder="ms-app://s-1-15-2-3183935804-3637592178" id="sid" class="form-control" ng-model="variant.sid" ng-required="variant.protocolType == 'wns'">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 control-label" for="clientSecret"></label>
-          <div class="col-sm-7">Client Secret<br>
-            <input type="text" placeholder="e.g. 42" id="clientSecret" class="form-control" ng-model="variant.clientSecret" ng-required="variant.protocolType == 'wns'">
-          </div>
-        </div>
-      </div>
-    </div>
 
   </div>
   <div class="modal-footer">
