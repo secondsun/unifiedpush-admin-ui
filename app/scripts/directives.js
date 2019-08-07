@@ -101,9 +101,7 @@ angular.module('upsConsole')
       'android': { url: 'snippets/register-device/android.java' },
       'cordova': { url: 'snippets/register-device/cordova.js' },
       'ios_objc': { url: 'snippets/register-device/ios.objc' },
-      'ios_swift': { url: 'snippets/register-device/ios.swift' },
-      'dotnet': { url: 'snippets/register-device/dotnet.cs' },
-      'adm': { url: 'snippets/register-device/adm.txt' }
+      'ios_swift': { url: 'snippets/register-device/ios.swift' }
     };
   })
 
@@ -147,8 +145,6 @@ angular.module('upsConsole')
         $scope.typeEnum = {
           android:      { name: 'Android',    snippets: ['android', 'cordova', 'push_config'] },
           ios:          { name: 'iOS',        snippets: ['ios_objc', 'ios_swift', 'cordova', 'push_config']},
-          windows_wns:  { name: 'Windows',    snippets: ['dotnet', 'cordova', 'push_config'] },
-          adm:          { name: 'ADM',        snippets: ['adm'] }
         };
         $scope.state = {
           activeSnippet: $scope.typeEnum[$scope.variant.type].snippets[0]

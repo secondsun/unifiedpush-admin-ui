@@ -64,7 +64,7 @@
 
   app.value('staticResourcePrefix', '');
 
-  app.constant('allVariantTypes', ['android', 'ios', 'windows_wns', 'adm']);
+  app.constant('allVariantTypes', ['android', 'ios']);
 
   app.value('allowCreateVariant', function( app, variantType ) {
     return true;
