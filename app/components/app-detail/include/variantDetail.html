@@ -9,9 +9,10 @@
   Firebase's Cloud Messaging Network (FCM) will be used.
   To learn more about FCM, visit our <a ups-doc="docs-push-android">Android</a>, <a ups-doc="docs-push-chrome">Chrome</a> or <a ups-doc="docs-push-cordova">Apache Cordova</a> guides for push.
 </p>
-<p ng-if="variant.type == 'adm'">Amazon's Device Messaging Network (ADM) will be used.
-  This is still experimental, the client SDK is not yet there.
+<p ng-if="variant.type == 'web_push'">
+  Your user's browser will determine the services used.
 </p>
+
 
 <!--
   TODO:
@@ -41,14 +42,12 @@
     <button class="btn btn-sm btn-default" ng-click="variants.edit( variant )"><span class="fa fa-pencil"></span> Edit network options</button>
   </dd>
 </dl>
-<dl class="dl-horizontal" ng-if="variant.type == 'windows_wns'">
-  <dt>Type:</dt>
-  <dd>Windows Push Network</dd>
-  <dt>Package SID:</dt>
-  <dd class="package-sid">{{ variant.sid }}</dd>
-  <dt>Client Secret:</dt>
-  <dd class="client-secret">
-    {{ variant.clientSecret }}<br />
+<dl class="dl-horizontal" ng-if="variant.type == 'web_push'">
+  <dt>Public Key:</dt>
+  <dd class="project-number">{{ variant.publicKey }}</dd>
+  <dt>Alias:</dt>
+  <dd class="google-key">
+    {{ variant.alias }}<br />
     <button class="btn btn-sm btn-default" ng-click="variants.edit( variant )"><span class="fa fa-pencil"></span> Edit network options</button>
   </dd>
 </dl>
@@ -59,26 +58,7 @@
     <button class="btn btn-sm btn-default" ng-click="variants.edit( variant )"><span class="fa fa-pencil"></span> Edit network options</button>
   </dd>
 </dl>
-<dl class="dl-horizontal" ng-if="variant.type == 'chrome'">
-  <dt>Client Id:</dt>
-  <dd>{{ variant.clientId }}</dd>
-  <dt>Client Secret:</dt>
-  <dd>{{ variant.clientSecret }}</dd>
-  <dt>Refresh Token:</dt>
-  <dd>
-    {{ variant.refreshToken }}<br />
-    <button class="btn btn-sm btn-default" ng-click="variants.edit( variant )"><span class="fa fa-pencil"></span> Edit network options</button>
-  </dd>
-</dl>
-<dl class="dl-horizontal" ng-if="variant.type == 'adm'">
-  <dt>Client Id:</dt>
-  <dd>{{ variant.clientId }}</dd>
-  <dt>Client Secret:</dt>
-  <dd>
-    {{ variant.clientSecret }}<br />
-    <button class="btn btn-sm btn-default" ng-click="variants.edit( variant )"><span class="fa fa-pencil"></span> Edit network options</button>
-  </dd>
-</dl>
+
 
 <ups-client-snippets variant="variant" all-variants="appDetail.app.variants" ng-if="variant.$deviceCount == 0 || variantDetail.forceShowSnippets"></ups-client-snippets>
 

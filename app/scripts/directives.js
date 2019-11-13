@@ -144,6 +144,7 @@ angular.module('upsConsole')
         $scope.contextPath = ContextProvider.contextPath();
         $scope.typeEnum = {
           android:      { name: 'Android',    snippets: ['android', 'cordova', 'push_config'] },
+          web_push:      { name: 'Web Push',    snippets: ['push_config'] },
           ios:          { name: 'iOS',        snippets: ['ios_objc', 'ios_swift', 'cordova', 'push_config']},
         };
         $scope.state = {

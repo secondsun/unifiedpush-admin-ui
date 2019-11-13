@@ -64,7 +64,7 @@
 
   app.value('staticResourcePrefix', '');
 
-  app.constant('allVariantTypes', ['android', 'ios']);
+  app.constant('allVariantTypes', ['web_push', 'android', 'ios']);
 
   app.value('allowCreateVariant', function( app, variantType ) {
     return true;
