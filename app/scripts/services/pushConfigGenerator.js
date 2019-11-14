@@ -10,8 +10,12 @@ upsServices.factory('pushConfigGenerator', function ($resource, $q, ContextProvi
 
 	function variantSpecificConfiguration(variant, config) {
 		switch (variant.type) {
-		case 'android':
-			config.senderID = variant.projectNumber;
+			case 'android':
+				config.senderID = variant.projectNumber;
+				break;
+			case 'web_push':
+				config.appServerKey = variant.publicKey;
+				break;
 		}
 	}
 

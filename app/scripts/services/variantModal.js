@@ -136,7 +136,10 @@ angular.module('upsConsole').factory('variantModal', function ($modal, $q, varia
     var properties = ['name'], result = {};
     switch (variant.type) {
     case 'android':
-      properties = properties.concat(['projectNumber', 'googleKey']);
+        properties = properties.concat(['projectNumber', 'googleKey']);
+        break;
+    case 'web_push':
+      properties = properties.concat(['alias', 'publicKey', 'privateKey']);
       break;
     case 'ios':
       if (variant.certificates && variant.certificates.length) {
