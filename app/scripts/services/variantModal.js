@@ -3,23 +3,23 @@
 angular.module('upsConsole').factory('variantModal', function ($modal, $q, variantsEndpoint, allowCreateVariant) {
   var service = {
 
-    editName: function(app, variant) {
+    editName: function (app, variant) {
       return $modal.open({
         templateUrl: 'dialogs/edit-variant-name.html',
-        controller: function($scope, $modalInstance) {
+        controller: function ($scope, $modalInstance) {
           $scope.variant = variant;
 
-          $scope.confirm = function() {
-            updateVariant( app, $scope.variant )
-              .then(function ( updatedVariant ) {
-                $modalInstance.close( updatedVariant );
+          $scope.confirm = function () {
+            updateVariant(app, $scope.variant)
+              .then(function (updatedVariant) {
+                $modalInstance.close(updatedVariant);
               })
-              .catch(function(err) {
+              .catch(function (err) {
                 $modalInstance.dismiss(err);
               });
           };
 
-          $scope.dismiss = function() {
+          $scope.dismiss = function () {
             $modalInstance.dismiss('cancel');
           };
         }
@@ -58,14 +58,14 @@ angular.module('upsConsole').factory('variantModal', function ($modal, $q, varia
 
           $scope.validateFileInputs = function () {
             switch ($scope.variant.type) {
-            case 'ios':
-              return $scope.variant.certificates.length > 0;
+              case 'ios':
+                return $scope.variant.certificates.length > 0;
             }
             return true;
           };
 
-          $scope.allowCreate = function( variantType ) {
-            return allowCreateVariant( app, variantType );
+          $scope.allowCreate = function (variantType) {
+            return allowCreateVariant(app, variantType);
           };
         }
       }).result;
@@ -81,9 +81,9 @@ angular.module('upsConsole').factory('variantModal', function ($modal, $q, varia
           $scope.variant.certificates = []; // initialize file list for upload
 
           $scope.confirm = function () {
-            updateVariant( app, $scope.variant )
-              .then(function ( updatedVariant ) {
-                $modalInstance.close( updatedVariant );
+            updateVariant(app, $scope.variant)
+              .then(function (updatedVariant) {
+                $modalInstance.close(updatedVariant);
               });
           };
 
@@ -110,7 +110,7 @@ angular.module('upsConsole').factory('variantModal', function ($modal, $q, varia
     }
   };
 
-  function updateVariant ( app, variant ) {
+  function updateVariant(app, variant) {
     var endpointParams = {
       appId: app.pushApplicationID,
       variantType: extractVariantType(variant),
@@ -135,24 +135,27 @@ angular.module('upsConsole').factory('variantModal', function ($modal, $q, varia
   function extractValidVariantData(variant) {
     var properties = ['name'], result = {};
     switch (variant.type) {
-    case 'android':
+      case 'android':
         properties = properties.concat(['projectNumber', 'googleKey']);
         break;
-    case 'web_push':
-      properties = properties.concat(['alias', 'publicKey', 'privateKey']);
-      break;
-    case 'ios':
-      if (variant.certificates && variant.certificates.length) {
-        variant.certificate = variant.certificates[0];
-      }
-      properties = properties.concat(['production', 'passphrase', 'certificate']);
-      var formData = new FormData();
-      properties.forEach(function (property) {
-        formData.append(property, variant[property] === undefined ? '' : variant[property]);
-      });
-      return formData;
-    default:
-      throw 'Unknown variant type ' + variant.type;
+      case 'web_push':
+        properties = properties.concat(['alias', 'publicKey', 'privateKey']);
+        break;
+      case 'ios_token':
+        properties = properties.concat(['production', 'keyId', 'bundleId', 'teamId', 'privateKey']);
+        break;
+      case 'ios':
+        if (variant.certificates && variant.certificates.length) {
+          variant.certificate = variant.certificates[0];
+        }
+        properties = properties.concat(['production', 'passphrase', 'certificate']);
+        var formData = new FormData();
+        properties.forEach(function (property) {
+          formData.append(property, variant[property] === undefined ? '' : variant[property]);
+        });
+        return formData;
+      default:
+        throw 'Unknown variant type ' + variant.type;
     }
     properties.forEach(function (property) {
       result[property] = variant[property];
@@ -160,10 +163,10 @@ angular.module('upsConsole').factory('variantModal', function ($modal, $q, varia
     return result;
   }
 
-  function extractVariantType( variant ) {
-    switch(variant.type) {
-    default:
-      return variant.type;
+  function extractVariantType(variant) {
+    switch (variant.type) {
+      default:
+        return variant.type;
     }
   }
 

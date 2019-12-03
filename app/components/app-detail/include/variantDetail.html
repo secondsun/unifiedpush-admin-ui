@@ -1,10 +1,15 @@
 
 
 <p ng-if="variant.type == 'ios'">
-  Apple's Push Network (APNs) will be used.
-  To learn more about APNs, visit our <a ups-doc="docs-push-ios">iOS</a>
-  or <a ups-doc="docs-push-cordova">Apache Cordova</a> guides for push.
-</p>
+    Apple's Push Network (APNs) will be used.
+    To learn more about APNs, visit our <a ups-doc="docs-push-ios">iOS</a>
+    or <a ups-doc="docs-push-cordova">Apache Cordova</a> guides for push.
+  </p>
+  <p ng-if="variant.type == 'ios_token'">
+      Apple's Push Network (APNs) will be used.
+      To learn more about APNs, visit our <a ups-doc="docs-push-ios">iOS</a>
+      or <a ups-doc="docs-push-cordova">Apache Cordova</a> guides for push.
+    </p>
 <p ng-if="variant.type == 'android'">
   Firebase's Cloud Messaging Network (FCM) will be used.
   To learn more about FCM, visit our <a ups-doc="docs-push-android">Android</a>, <a ups-doc="docs-push-chrome">Chrome</a> or <a ups-doc="docs-push-cordova">Apache Cordova</a> guides for push.
@@ -52,13 +57,32 @@
   </dd>
 </dl>
 <dl class="dl-horizontal" ng-if="variant.type == 'ios'">
-  <dt>Type:</dt>
-  <dd>
-    {{ variant.production ? 'Production' : 'Development' }}<br />
-    <button class="btn btn-sm btn-default" ng-click="variants.edit( variant )"><span class="fa fa-pencil"></span> Edit network options</button>
-  </dd>
-</dl>
-
+    <dt>Type:</dt>
+    <dd>
+      {{ variant.production ? 'Production' : 'Development' }}<br />
+      <button class="btn btn-sm btn-default" ng-click="variants.edit( variant )"><span class="fa fa-pencil"></span> Edit network options</button>
+    </dd>
+  </dl>
+  <dl class="dl-horizontal" ng-if="variant.type == 'ios_token'">
+      <dt>Type:</dt>
+      <dd>
+        {{ variant.production ? 'Production' : 'Development' }}<br />
+      </dd>
+      <dt>Bundle ID:</dt>
+      <dd>
+          {{ variant.bundleId }}<br />
+      </dd>
+      <dt>Key ID:</dt>
+      <dd>
+          {{ variant.keyId }}<br />
+      </dd>
+      <dt>Team ID:</dt>
+      <dd>
+        {{ variant.teamId }}<br />
+        <button class="btn btn-sm btn-default" ng-click="variants.edit( variant )"><span class="fa fa-pencil"></span> Edit network options</button>
+      </dd>
+    </dl>
+      
 
 <ups-client-snippets variant="variant" all-variants="appDetail.app.variants" ng-if="variant.$deviceCount == 0 || variantDetail.forceShowSnippets"></ups-client-snippets>
 
