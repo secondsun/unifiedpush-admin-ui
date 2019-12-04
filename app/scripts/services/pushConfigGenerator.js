@@ -5,6 +5,9 @@ var upsServices = angular.module('upsConsole');
 upsServices.factory('pushConfigGenerator', function ($resource, $q, ContextProvider) {
 
 	function cordovaVariantType(variant) {
+			if (variant.type === 'web_push') {
+				return 'webpush';
+			}
 			return variant.type;
 	}
 
