@@ -19,7 +19,6 @@
 </div>
 
 <div class="ups-snippet">
-  <a href tooltip="{{ clipText }}" tooltip-placement="right" clip-copy="copySnippet()" clip-click="copied()">Copy</a>
   <pre ng-bind="snippets.java.source" class="pre-scrollable prettyprint" ng-if="activeSnippet == 'java'"></pre>
   <pre ng-bind="snippets.nodejs.source" class="pre-scrollable prettyprint" ng-if="activeSnippet == 'nodejs'"></pre>
   <pre ng-bind="snippets.curl.source" class="pre-scrollable prettyprint" ng-if="activeSnippet == 'curl'"></pre>

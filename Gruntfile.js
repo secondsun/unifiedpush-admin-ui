@@ -21,7 +21,7 @@ module.exports = function (grunt) {
 
   // configurable paths
   var yeomanConfig = {
-    lib: 'app/bower_components',
+    lib: 'node_modules',
     app: 'app',
     dist: 'dist',
     tmp: '.tmp'
@@ -214,17 +214,6 @@ module.exports = function (grunt) {
           }
         ]
       },
-      misc: {
-        files: [
-          {
-            expand: true,
-            dot: true,
-            cwd: '<%= yeoman.lib %>/zeroclipboard/dist/',
-            dest: '<%= yeoman.tmp %>/img/',
-            src: ['ZeroClipboard.swf']
-          }
-        ]
-      },
       dist: {
         files: [
           {
@@ -410,7 +399,6 @@ module.exports = function (grunt) {
       'concurrent:server',
       'less',
       'copy:fonts',
-      'copy:misc',
       'copy:jbossweb',
       'autoprefixer',
       'watch'
@@ -427,7 +415,6 @@ module.exports = function (grunt) {
     'clean:dist',
     'less',
     'copy:fonts',
-    'copy:misc',
     'useminPrepare',
     'ngtemplates',
     'htmlmin',
