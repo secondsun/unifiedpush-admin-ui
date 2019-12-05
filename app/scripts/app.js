@@ -13,8 +13,7 @@
     'patternfly.autofocus',
     'patternfly.notification',
     'patternfly.select',
-    'angular-c3',
-    'ngClipboard'
+    'angular-c3'
   ]);
 
   app.run(function($rootScope) {
@@ -56,8 +55,8 @@
     return result;
   });
 
-  app.config(function(ngClipProvider) {
-    ngClipProvider.setPath( 'img/ZeroClipboard.swf' );
+  app.config(function() {
+    
   });
 
   app.value('apiPrefix', '');

@@ -19,8 +19,6 @@ const JS = [
     'ngC3/dist/c3-chart.js',
 
     'google-code-prettify/bin/prettify.min.js',
-    'zeroclipboard/dist/ZeroClipboard.min.js',
-    'ng-clip/src/ngClip.js',
     'keycloak/keycloak.min.js'
 ];
 
