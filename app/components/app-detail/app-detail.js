@@ -1,5 +1,5 @@
 angular.module('upsConsole')
-  .controller('AppDetailController', function ($rootScope, $q, $routeParams, $modal, applicationsEndpoint, messageSenderEndpoint, metricsEndpoint, ContextProvider, Notifications) {
+  .controller('AppDetailController', function ($rootScope, $q, $routeParams, $uibModal,  messageSenderEndpoint, metricsEndpoint, applicationsEndpoint, ContextProvider, Notifications) {
 
     var self = this;
 
@@ -35,9 +35,9 @@ angular.module('upsConsole')
     };
 
     this.sendNotification = function () {
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'dialogs/send-push-notification.html',
-        controller: function ($scope, $modalInstance) {
+        controller: function ($scope, $uibModalInstance) {
 
           $scope.app = self.app;
 
@@ -72,7 +72,7 @@ angular.module('upsConsole')
               .then(function () {
                 self.app.$messageCount += 1;
                 self.notifications.unshift({submitDate: new Date().getTime()});
-                $modalInstance.close();
+                $uibModalInstance.close();
                 $rootScope.$broadcast('upsNotificationSent', $scope.pushData, $scope.app);
                 Notifications.success('Notification was successfully sent');
               })
@@ -82,7 +82,7 @@ angular.module('upsConsole')
           };
 
           $scope.cancel = function () {
-            $modalInstance.dismiss();
+            $uibModalInstance.dismiss();
           };
         }
       });

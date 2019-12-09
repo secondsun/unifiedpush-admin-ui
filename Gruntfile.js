@@ -28,7 +28,7 @@ module.exports = function (grunt) {
   };
 
   try {
-    yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
+    yeomanConfig.app = yeomanConfig.app;
   } catch (e) {
   }
 

@@ -1,35 +1,35 @@
 'use strict';
 
-angular.module('upsConsole').factory('variantModal', function ($modal, $q, variantsEndpoint, allowCreateVariant) {
+angular.module('upsConsole').factory('variantModal', function ($uibModal, $q, variantsEndpoint, allowCreateVariant) {
   var service = {
 
     editName: function (app, variant) {
-      return $modal.open({
+      return $uibModal.open({
         templateUrl: 'dialogs/edit-variant-name.html',
-        controller: function ($scope, $modalInstance) {
+        controller: function ($scope, $uibModalInstance) {
           $scope.variant = variant;
 
           $scope.confirm = function () {
             updateVariant(app, $scope.variant)
               .then(function (updatedVariant) {
-                $modalInstance.close(updatedVariant);
+                $uibModalInstance.close(updatedVariant);
               })
               .catch(function (err) {
-                $modalInstance.dismiss(err);
+                $uibModalInstance.dismiss(err);
               });
           };
 
           $scope.dismiss = function () {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           };
         }
       }).result;
     },
 
     add: function (app) {
-      return $modal.open({
+      return $uibModal.open({
         templateUrl: 'dialogs/create-variant.html',
-        controller: function ($scope, $modalInstance) {
+        controller: function ($scope, $uibModalInstance) {
 
           $scope.isNew = true;
           $scope.variant = {}; // start with empty variant
@@ -45,15 +45,15 @@ angular.module('upsConsole').factory('variantModal', function ($modal, $q, varia
               variantType: extractVariantType($scope.variant)
             }, variantData)
               .then(function (variant) {
-                $modalInstance.close(variant);
+                $uibModalInstance.close(variant);
               })
               .catch(function (err) {
-                $modalInstance.dismiss(err);
+                $uibModalInstance.dismiss(err);
               });
           };
 
           $scope.dismiss = function () {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           };
 
           $scope.validateFileInputs = function () {
@@ -72,9 +72,9 @@ angular.module('upsConsole').factory('variantModal', function ($modal, $q, varia
     },
 
     edit: function (app, variant) {
-      return $modal.open({
+      return $uibModal.open({
         templateUrl: 'dialogs/create-variant.html',
-        controller: function ($scope, $modalInstance) {
+        controller: function ($scope, $uibModalInstance) {
 
           $scope.isNew = false;
           $scope.variant = variant;
@@ -83,12 +83,12 @@ angular.module('upsConsole').factory('variantModal', function ($modal, $q, varia
           $scope.confirm = function () {
             updateVariant(app, $scope.variant)
               .then(function (updatedVariant) {
-                $modalInstance.close(updatedVariant);
+                $uibModalInstance.close(updatedVariant);
               });
           };
 
           $scope.dismiss = function () {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           };
 
           $scope.validateFileInputs = function () {

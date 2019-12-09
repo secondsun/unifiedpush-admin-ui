@@ -1,5 +1,5 @@
 angular.module('upsConsole')
-  .controller('VariantDetailController', function ( $modal, variantModal, $scope, installationsEndpoint, ContextProvider ) {
+  .controller('VariantDetailController', function ( $scope, installationsEndpoint, ContextProvider ) {
 
     var self = this;
 
