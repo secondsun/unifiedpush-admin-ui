@@ -1,6 +1,6 @@
 angular.module('upsConsole')
-  .controller('VariantsController', function ( $http, $rootScope, $uibModal, variantModal, $scope, variantsEndpoint, exporterEndpoint, importerEndpoint, Notifications, ErrorReporter, allowCreateVariant, allVariantTypes ) {
 
+  .controller('VariantsController', function ( $http, $rootScope, $uibModal, variantModal, $scope, variantsEndpoint, exporterEndpoint, importerEndpoint, Notifications, ErrorReporter, allowCreateVariant, allVariantTypes, ui_config ) {
     var self = this;
 
     this.app = $scope.$parent.$parent.appDetail.app;
@@ -198,7 +198,7 @@ angular.module('upsConsole')
 
     this.isAllowedToAddVariant = function() {
       return allVariantTypes.some(function( variantType ) {
-        return allowCreateVariant( self.app, variantType );
+        return allowCreateVariant( self.app, variantType, ui_config );
       });
     };
 

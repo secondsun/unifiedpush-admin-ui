@@ -7,6 +7,7 @@
   var auth = {};
   var app = angular.module('upsConsole');
   var AUTH_CONFIG_PATH = 'rest/auth/config';
+  var UI_CONFIG_PATH = 'rest/ui/config';
 
   function initKeycloak() {
     // Ideally we would use the config object retrieved by the fetch call
@@ -25,9 +26,16 @@
       app.factory('Auth', function () {
         return auth;
       });
-      angular.bootstrap(document, ['upsConsole']);
     }).error(function () {
       window.location.reload();
+    });
+  }
+
+  function initUi() {
+    return fetch(UI_CONFIG_PATH).then(function(response){
+      return response.json();
+    }).then(function (config) {
+      app.value('ui_conifg',config);
     });
   }
 
@@ -83,9 +91,11 @@
           };
           return auth;
         });
-
-        angular.bootstrap(document, ['upsConsole']);
       }
+    }).then(function(){
+      return initUi();
+    }).then(function() {
+      angular.bootstrap(document, ['upsConsole']);
     });
   });
 })();

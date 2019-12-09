@@ -65,7 +65,8 @@
 
   app.constant('allVariantTypes', ['web_push', 'android', 'ios', 'ios_token']);
 
-  app.value('allowCreateVariant', function( app, variantType ) {
+  app.value('allowCreateVariant', function( app, variantType, ui_config ) {
+    console.log(ui_config);
     return true;
   });
 
