@@ -1,5 +1,5 @@
 angular.module('upsConsole')
-  .controller('VariantsController', function ( $http, $rootScope, $modal, variantModal, $scope, variantsEndpoint, exporterEndpoint, importerEndpoint, Notifications, ErrorReporter, allowCreateVariant, allVariantTypes ) {
+  .controller('VariantsController', function ( $http, $rootScope, $uibModal, variantModal, $scope, variantsEndpoint, exporterEndpoint, importerEndpoint, Notifications, ErrorReporter, allowCreateVariant, allVariantTypes ) {
 
     var self = this;
 
@@ -73,9 +73,9 @@ angular.module('upsConsole')
     };
 
     this.delete = function( variant ) {
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'dialogs/remove-variant.html',
-        controller: function( $modalInstance, $scope ) {
+        controller: function( $uibModalInstance, $scope ) {
           $scope.variant = variant;
           $scope.confirm = function() {
             variantsEndpoint.delete({
@@ -87,20 +87,20 @@ angular.module('upsConsole')
                   return v != variant;
                 });
                 self.byType = splitByType( self.app.variants );
-                $modalInstance.close();
+                $uibModalInstance.close();
               });
           };
           $scope.dismiss = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           }
         }
       });
     };
 
     this.renewVariantSecret = function ( variant ) {
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'dialogs/renew-variant-secret.html',
-        controller: function( $scope, $modalInstance ) {
+        controller: function( $scope, $uibModalInstance ) {
           $scope.variant = variant;
           $scope.confirm = function() {
             variantsEndpoint.reset({
@@ -109,21 +109,21 @@ angular.module('upsConsole')
                 variantId: variant.variantID })
               .then(function (receivedVariant) {
                 variant.secret  = receivedVariant.secret;
-                $modalInstance.close( variant );
+                $uibModalInstance.close( variant );
                 //$rootScope.$digest();
               });
           };
           $scope.dismiss = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           }
         }
       });
     };
 
     this.exportInstallations = function ( variant ) {
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'dialogs/export-installations.html',
-        controller: function( $scope, $modalInstance ) {
+        controller: function( $scope, $uibModalInstance ) {
           $scope.variant = variant;
           $scope.confirm = function() {
             var params = {
@@ -137,21 +137,21 @@ angular.module('upsConsole')
               hiddenElement.download = variant.variantID + '.json';
               hiddenElement.click();
 
-              $modalInstance.close();
+              $uibModalInstance.close();
               Notifications.success('Successfully exported installations');
             });
           };
           $scope.dismiss = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           }
         }
       });
     };
 
     this.importInstallations = function (variant) {
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'dialogs/import-installations.html',
-        controller: function( $scope, $modalInstance ) {
+        controller: function( $scope, $uibModalInstance ) {
           $scope.variant = variant;
           $scope.installations = [];
           $scope.confirm = function() {
@@ -161,11 +161,11 @@ angular.module('upsConsole')
                 ':' + variant.secret);
             importerEndpoint.import(null, fd, function(){
               Notifications.success('Import processing has started');
-              $modalInstance.close();
+              $uibModalInstance.close();
             });
           };
           $scope.dismiss = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           };
           $scope.previewImport = function() {
             if (window.File && window.FileList && window.FileReader) {

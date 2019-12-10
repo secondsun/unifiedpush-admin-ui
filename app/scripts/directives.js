@@ -140,7 +140,7 @@ angular.module('upsConsole')
       },
       restrict: 'E',
       controller: function( $scope, ContextProvider, SnippetRetriever, $sce, $interpolate, $timeout, pushConfigGenerator ) {
-        $scope.clipText = $sce.trustAsHtml('Copy to clipboard');
+
         $scope.contextPath = ContextProvider.contextPath();
         $scope.typeEnum = {
           android:      { name: 'Android',    snippets: ['android', 'cordova', 'push_config'] },
@@ -161,15 +161,7 @@ angular.module('upsConsole')
           $scope.pushConfigSource = pushConfigGenerator.generate($scope.allVariants);
         }
         renderSnippets();
-        $scope.copySnippet = function() {
-          return $scope.snippets[$scope.state.activeSnippet].source;
-        };
-        $scope.copied = function() {
-          $scope.clipText = 'Copied!';
-          $timeout(function() {
-            $scope.clipText = 'Copy to clipboard';
-          }, 1000);
-        };
+        
         $scope.cordovaVariantType = (function() {
             return $scope.variant.type;
         })();
@@ -224,7 +216,6 @@ angular.module('upsConsole')
       },
       controller: function( $scope, ContextProvider, SnippetRetriever, $sce, $interpolate, $timeout, senderSnippets ) {
 
-        $scope.clipText = $sce.trustAsHtml('Copy to clipboard');
         $scope.contextPath = ContextProvider.contextPath();
         $scope.snippets = senderSnippets;
         function renderSnippets() {
@@ -239,15 +230,7 @@ angular.module('upsConsole')
           });
         }
         renderSnippets();
-        $scope.copySnippet = function() {
-          return $scope.snippets[$scope.activeSnippet].source;
-        };
-        $scope.copied = function() {
-          $scope.clipText = 'Copied!';
-          $timeout(function() {
-            $scope.clipText = 'Copy to clipboard';
-          }, 1000);
-        };
+       
         $scope.$watch('app.masterSecret', function() {
           renderSnippets();
         });

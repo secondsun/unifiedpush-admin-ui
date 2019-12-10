@@ -10,20 +10,25 @@ var LIVERELOAD_PORT = 35729;
 
 module.exports = function (grunt) {
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+  const path = require('path');
+  const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+  // assets.js
+  const Assets = require('./assets');
 
   // load custom tasks
   grunt.loadTasks('tasks');
 
   // configurable paths
   var yeomanConfig = {
-    lib: 'app/bower_components',
+    lib: 'node_modules',
     app: 'app',
     dist: 'dist',
     tmp: '.tmp'
   };
 
   try {
-    yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
+    yeomanConfig.app = yeomanConfig.app;
   } catch (e) {
   }
 
@@ -78,7 +83,7 @@ module.exports = function (grunt) {
           '{<%= yeoman.app %>,<%= yeoman.tmp %>}/scripts/{,*/}*.js',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ],
-        tasks: [ 'newer:copy:jbossweb' ]
+        tasks: ['newer:copy:jbossweb']
       }
     },
     autoprefixer: {
@@ -191,32 +196,21 @@ module.exports = function (grunt) {
             dot: true,
             cwd: '<%= yeoman.lib %>/font-awesome/fonts/',
             dest: '<%= yeoman.tmp %>/fonts/',
-            src: [ '**' ]
+            src: ['**']
           },
           {
             expand: true,
             dot: true,
             cwd: '<%= yeoman.lib %>/patternfly/dist/fonts/',
             dest: '<%= yeoman.tmp %>/fonts/',
-            src: [ '**' ]
+            src: ['**']
           },
           {
             expand: true,
             dot: true,
             cwd: '<%= yeoman.app %>/styles/fonts/exo2/',
             dest: '<%= yeoman.tmp %>/fonts/',
-            src: [ '**', '!*.less', '!*.txt' ]
-          }
-        ]
-      },
-      misc: {
-        files: [
-          {
-            expand: true,
-            dot: true,
-            cwd: '<%= yeoman.lib %>/zeroclipboard/dist/',
-            dest: '<%= yeoman.tmp %>/img/',
-            src: [ 'ZeroClipboard.swf' ]
+            src: ['**', '!*.less', '!*.txt']
           }
         ]
       },
@@ -257,8 +251,8 @@ module.exports = function (grunt) {
               'account.*.css',
               'login.*.css'
             ],
-            rename: function(dest, src) {
-              var renamed = dest + src.replace(/\..+\.css$/,'.css');
+            rename: function (dest, src) {
+              var renamed = dest + src.replace(/\..+\.css$/, '.css');
               console.log(renamed);
               return renamed;
             }
@@ -271,13 +265,13 @@ module.exports = function (grunt) {
             expand: true,
             cwd: '<%= yeoman.tmp %>',
             dest: '<%= local.jbossweb %>',
-            src: [ '**', '!**/*.less' ]
+            src: ['**', '!**/*.less']
           },
           {
             expand: true,
             cwd: '<%= yeoman.app %>',
             dest: '<%= local.jbossweb %>',
-            src: [ '**' ]
+            src: ['**']
           }
         ]
       },
@@ -287,7 +281,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: '<%= yeoman.dist %>',
             dest: '<%= local.jbossweb %>',
-            src: [ '**', '!**/*.txt' ]
+            src: ['**', '!**/*.txt']
           }
         ]
       }
@@ -329,7 +323,7 @@ module.exports = function (grunt) {
         report: 'min'
       }
     },
-    ngtemplates:  {
+    ngtemplates: {
       upsConsole: {
         src: [
           'components/**/**.html',
@@ -339,17 +333,32 @@ module.exports = function (grunt) {
         ],
         cwd: '<%= yeoman.app %>',
         dest: '<%= yeoman.tmp %>/ngtemplates/templates.js',
-        options:    {
+        options: {
           usemin: 'scripts/templates.js'
         }
       }
     },
-    bower: {
-      install: {
-        options: {
-          targetDir: 'app/bower-components/'
-        }
-      }
+    webpack: {
+      myConfig: {
+
+        entry: './app/scripts/app.js',
+        output: {
+          path: __dirname + '/app/bower_components/',
+          filename: 'app.bundle.js'
+        },
+        plugins: [
+          new CopyWebpackPlugin(
+            Assets.map(asset => {
+              return {
+                from: path.resolve(__dirname, `./node_modules/${asset}`),
+                to: path.resolve(__dirname, './app/bower_components/npm')
+              };
+            })
+          )
+        ]
+
+
+      },
     },
     compress: {
       main: {
@@ -390,7 +399,6 @@ module.exports = function (grunt) {
       'concurrent:server',
       'less',
       'copy:fonts',
-      'copy:misc',
       'copy:jbossweb',
       'autoprefixer',
       'watch'
@@ -407,7 +415,6 @@ module.exports = function (grunt) {
     'clean:dist',
     'less',
     'copy:fonts',
-    'copy:misc',
     'useminPrepare',
     'ngtemplates',
     'htmlmin',
@@ -429,7 +436,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('dist', [
-    'bower:install',
+    'webpack',
     'default'
   ]);
 
@@ -439,6 +446,6 @@ module.exports = function (grunt) {
     'clean:jbosswebDist',
     'copy:jbosswebDist'
   ]);
-
+  grunt.loadNpmTasks('grunt-webpack');
   grunt.registerTask('jboss_web', ['copy:jbossweb']);
 };

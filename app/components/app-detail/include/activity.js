@@ -1,5 +1,5 @@
 angular.module('upsConsole')
-  .controller('ActivityController', function ( $log, $timeout, $interval, $modal, variantModal, $scope, metricsEndpoint ) {
+  .controller('ActivityController', function ( $log, $timeout, $interval,$uibModal , variantModal, $scope, metricsEndpoint ) {
 
     var self = this;
 

@@ -1,5 +1,5 @@
 angular.module('upsConsole')
-  .controller('SenderController', function( $modal, $scope, applicationsEndpoint, ContextProvider ) {
+  .controller('SenderController', function( $uibModal, $scope, applicationsEndpoint, ContextProvider ) {
 
     var self = this;
 
@@ -8,19 +8,19 @@ angular.module('upsConsole')
     this.contextPath = ContextProvider.contextPath();
 
     this.renewMasterSecret = function () {
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'inline:renew-master-secret.html',
-        controller: function( $scope, $modalInstance ) {
+        controller: function( $scope, $uibModalInstance ) {
           $scope.app = self.app;
           $scope.confirm = function() {
             applicationsEndpoint.reset({appId: self.app.pushApplicationID})
               .then(function (application) {
                 self.app.masterSecret = application.masterSecret;
-                $modalInstance.close( application );
+                $uibModalInstance.close( application );
               });
           };
           $scope.dismiss = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           }
         }
       });

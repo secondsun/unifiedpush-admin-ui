@@ -1,24 +1,24 @@
 'use strict';
 
-angular.module('upsConsole').factory('appModal', function ($modal, applicationsEndpoint) {
+angular.module('upsConsole').factory('appModal', function ($uibModal, applicationsEndpoint) {
   var service = {
 
     editName: function (app) {
-      return $modal.open({
+      return $uibModal.open({
         templateUrl: 'dialogs/edit-app-name.html',
-        controller: function ($scope, $modalInstance) {
+        controller: function ($scope, $uibModalInstance) {
           $scope.app = app;
 
           $scope.confirm = function () {
             var data = { name: app.name, description: app.description };
             applicationsEndpoint.update({ appId: app.pushApplicationID }, data )
               .then(function ( updatedApp ) {
-                $modalInstance.close( updatedApp );
+                $uibModalInstance.close( updatedApp );
               });
           };
 
           $scope.dismiss = function () {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           };
         }
       }).result;

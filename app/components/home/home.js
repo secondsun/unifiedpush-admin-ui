@@ -1,6 +1,5 @@
 angular.module('upsConsole')
-  .controller('HomeController', function( $q, $modal, $router, $rootScope, applicationsEndpoint, dashboardEndpoint, appModal, Notifications ) {
-
+  .controller('HomeController', function( $uibModal, $router, $rootScope, applicationsEndpoint, dashboardEndpoint, appModal, Notifications ) {
     var self = this;
 
     this.apps = [];
@@ -51,9 +50,9 @@ angular.module('upsConsole')
     };
 
     this.deleteApp = function(app) {
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'dialogs/remove-app.html',
-        controller: function( $modalInstance, $scope ) {
+        controller: function( $uibModalInstance, $scope ) {
           $scope.app = app;
           $scope.confirm = function() {
             applicationsEndpoint.delete({appId: app.pushApplicationID})
@@ -62,14 +61,14 @@ angular.module('upsConsole')
                 return self.fetchNewPage(self.currentPage);
               })
               .then(function() {
-                $modalInstance.close();
+                $uibModalInstance.close();
                 if (self.totalItems < 1) {
                   $router.parent.navigate('/welcome');
                 }
               });
           };
           $scope.dismiss = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           }
         }
       });
