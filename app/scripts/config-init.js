@@ -32,10 +32,16 @@
   }
 
   function initUi() {
+    console.log('init ui called');
     return fetch(UI_CONFIG_PATH).then(function(response){
       return response.json();
     }).then(function (config) {
-      app.value('ui_conifg',config);
+      config.UPS_DISABLED = (config.UPS_DISABLED || '').split(',').reduce(function(acc, value) {
+        acc[value]=true;
+        return acc;
+      }, {});
+      config.DOCS_LINK = config.DOCS_LINK || 'http://aerogear.org';
+      return config;
     });
   }
 
@@ -94,7 +100,8 @@
       }
     }).then(function(){
       return initUi();
-    }).then(function() {
+    }).then(function(config) {
+      app.value('ui_config',config);
       angular.bootstrap(document, ['upsConsole']);
     });
   });

@@ -46,12 +46,8 @@
     $logProvider.debugEnabled( appConfig.logDebugEnabled );
   });
 
-  app.factory('docsLinks', function( $http, staticResourcePrefix ) {
-    var result = {};
-    $http.get( staticResourcePrefix + 'docs-links.json' )
-      .then(function( response ) {
-        angular.extend( result, response.data );
-      });
+  app.factory('docsLinks', function( $http, ui_config ) {
+    var result = ui_config.DOCS_LINKS;
     return result;
   });
 
@@ -61,13 +57,15 @@
 
   app.value('apiPrefix', '');
 
-  app.value('staticResourcePrefix', '');
 
   app.constant('allVariantTypes', ['web_push', 'android', 'ios', 'ios_token']);
 
-  app.value('allowCreateVariant', function( app, variantType, ui_config ) {
-    console.log(ui_config);
-    return true;
+  app.factory('allowCreateVariant', function(ui_config){
+    return function( upsApplication, variantType ) {
+
+      console.log('allowCreateVariant', ui_config);
+      return !!!(ui_config.UPS_DISABLED)[variantType];
+    };
   });
 
 })();
