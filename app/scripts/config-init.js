@@ -7,6 +7,7 @@
   var auth = {};
   var app = angular.module('upsConsole');
   var AUTH_CONFIG_PATH = 'rest/auth/config';
+  var UI_CONFIG_PATH = 'rest/ui/config';
 
   function initKeycloak() {
     // Ideally we would use the config object retrieved by the fetch call
@@ -25,9 +26,22 @@
       app.factory('Auth', function () {
         return auth;
       });
-      angular.bootstrap(document, ['upsConsole']);
     }).error(function () {
       window.location.reload();
+    });
+  }
+
+  function initUi() {
+    console.log('init ui called');
+    return fetch(UI_CONFIG_PATH).then(function(response){
+      return response.json();
+    }).then(function (config) {
+      config.UPS_DISABLED = (config.UPS_DISABLED || '').split(',').reduce(function(acc, value) {
+        acc[value]=true;
+        return acc;
+      }, {});
+      config.DOCS_LINK = config.DOCS_LINK || 'http://aerogear.org';
+      return config;
     });
   }
 
@@ -83,9 +97,12 @@
           };
           return auth;
         });
-
-        angular.bootstrap(document, ['upsConsole']);
       }
+    }).then(function(){
+      return initUi();
+    }).then(function(config) {
+      app.value('ui_config',config);
+      angular.bootstrap(document, ['upsConsole']);
     });
   });
 })();

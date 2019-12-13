@@ -1,8 +1,8 @@
 angular.module('upsConsole')
-  .controller('AppDetailController', function ($rootScope, $q, $routeParams, $uibModal,  messageSenderEndpoint, metricsEndpoint, applicationsEndpoint, ContextProvider, Notifications) {
+  .controller('AppDetailController', function ($rootScope, $q, $routeParams, $uibModal, messageSenderEndpoint, metricsEndpoint, applicationsEndpoint, ContextProvider, Notifications) {
 
     var self = this;
-
+    
     this.app = null; // is retrieved in canActivate
     this.notifications = null; // is retrieved in canActivate
     this.tab = $routeParams.tab;

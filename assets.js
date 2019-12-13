@@ -1,4 +1,5 @@
 const CSS = [
+    'patternfly/less/patternfly.less',
 ];
 const JS = [
     'jquery/dist/jquery.js',
