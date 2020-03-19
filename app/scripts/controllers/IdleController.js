@@ -17,13 +17,13 @@ angular.module('upsConsole')
      */
     self.idleCountdown = appConfig.idleWarningDuration + 1;
     $rootScope.$on('KeepaliveResponse', function () {
-      Auth.keycloak.updateToken(45).success(function (refreshed) {
+      Auth.keycloak.updateToken(45).then(function (refreshed) {
         if (refreshed) {
           $log.debug('token was successfully refreshed');
         } else {
           $log.debug('token is still valid');
         }
-      }).error(function () {
+      }).catch(function () {
         $log.debug('failed to refresh the token, or the session has expired');
       });
     });
