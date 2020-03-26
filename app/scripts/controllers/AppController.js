@@ -28,6 +28,7 @@ angular.module('upsConsole')
     function getUsername() {
       if (Auth && Auth.keycloak) {
         $rootScope.showUserDropdown = true;
+        console.log('getUsername ', Auth);
         return Auth.keycloak.idTokenParsed.preferred_username;
       } else {
         $rootScope.showUserDropdown = false;

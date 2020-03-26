@@ -20,7 +20,7 @@ const JS = [
     'ngC3/dist/c3-chart.js',
 
     'google-code-prettify/bin/prettify.min.js',
-    'keycloak/keycloak.min.js'
+    'keycloak-js/dist/keycloak.min.js'
 ];
 
 module.exports = [...JS, ...CSS];
