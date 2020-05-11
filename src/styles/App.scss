@@ -132,4 +132,19 @@ h1 {
   text-transform: capitalize;
 }
 
+//styling for Modal dialogs
+.dialog-form{
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.formInput{
+  margin-top: 20px;
+}
+
+.deleteBtn{
+  margin-top: 20px;
+  margin-right: 10px;
+}
 

@@ -102,3 +102,15 @@ h1 {
   text-align: center;
   width: 50px;
   text-transform: capitalize; }
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left; }
+
+.formInput {
+  margin-top: 20px; }
+
+.deleteBtn {
+  margin-top: 20px;
+  margin-right: 10px; }
