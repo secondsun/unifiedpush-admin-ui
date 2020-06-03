@@ -20,9 +20,11 @@ import {
   Button,
   DataListItem,
 } from '@patternfly/react-core';
+import { TrashIcon, EditIcon } from '@patternfly/react-icons';
 import { Label } from '../common/Label';
 import { CreateApplicationWizard } from '../application/wizard/CreateApplicationWizard';
 import { ApplicationListConsumer } from '../context/Context';
+import { DeleteApplicationPage } from '../application/wizard/DeleteApplicationPage';
 
 interface Props {
   apps: PushApplication[];
@@ -30,6 +32,8 @@ interface Props {
 
 interface State {
   openCreateAppWizard: boolean;
+  deleteApplicationPage: boolean;
+  selectedApp?: PushApplication;
 }
 
 export class ApplicationList extends Component<Props, State> {
@@ -37,12 +41,17 @@ export class ApplicationList extends Component<Props, State> {
     super(props);
     this.state = {
       openCreateAppWizard: false,
+      deleteApplicationPage: false,
     };
   }
 
   render() {
     const dataListItem = (app: PushApplication): ReactNode => (
-      <DataListItem aria-labelledby={'item'} key={app.pushApplicationID}>
+      <DataListItem
+        aria-labelledby={'item'}
+        key={app.pushApplicationID}
+        className="appList"
+      >
         <DataListItemRow>
           <DataListItemCells
             dataListCells={[
@@ -79,6 +88,41 @@ export class ApplicationList extends Component<Props, State> {
                   </List>
                 </div>
               </DataListCell>,
+              <DataListCell key="buttons">
+                <List className="buttonGroup" variant={ListVariant.inline}>
+                  <ListItem>
+                    <Button
+                      className="editBtn"
+                      variant="secondary"
+                      // isHover={false}
+                      icon={<EditIcon />}
+                      onClick={() =>
+                        this.setState({
+                          deleteApplicationPage: true,
+                          selectedApp: app,
+                        })
+                      }
+                    >
+                      <EditIcon />
+                    </Button>
+                  </ListItem>
+                  <ListItem>
+                    <Button
+                      className="deleteBtn"
+                      variant="danger"
+                      icon={TrashIcon}
+                      onClick={() =>
+                        this.setState({
+                          deleteApplicationPage: true,
+                          selectedApp: app,
+                        })
+                      }
+                    >
+                      <TrashIcon />
+                    </Button>
+                  </ListItem>
+                </List>
+              </DataListCell>,
             ]}
           />
         </DataListItemRow>
@@ -90,6 +134,14 @@ export class ApplicationList extends Component<Props, State> {
         {({ applications, refresh }): ReactNode => {
           return (
             <>
+              <DeleteApplicationPage
+                open={this.state.deleteApplicationPage}
+                app={this.state.selectedApp}
+                close={() => {
+                  this.setState({ deleteApplicationPage: false });
+                  refresh();
+                }}
+              />
               <CreateApplicationWizard
                 open={this.state.openCreateAppWizard}
                 close={() => {
