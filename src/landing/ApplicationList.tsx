@@ -24,7 +24,8 @@ import { TrashIcon, EditIcon } from '@patternfly/react-icons';
 import { Label } from '../common/Label';
 import { CreateApplicationWizard } from '../application/wizard/CreateApplicationWizard';
 import { ApplicationListConsumer } from '../context/Context';
-import { DeleteApplicationPage } from '../application/wizard/DeleteApplicationPage';
+import { DeleteApplicationPage } from '../application/crud/DeleteApplicationPage';
+import { UpdateApplicationPage } from '../application/crud/UpdateApplicationPage';
 
 interface Props {
   apps: PushApplication[];
@@ -33,6 +34,7 @@ interface Props {
 interface State {
   openCreateAppWizard: boolean;
   deleteApplicationPage: boolean;
+  updateApplicationPage: boolean;
   selectedApp?: PushApplication;
 }
 
@@ -42,6 +44,7 @@ export class ApplicationList extends Component<Props, State> {
     this.state = {
       openCreateAppWizard: false,
       deleteApplicationPage: false,
+      updateApplicationPage: false,
     };
   }
 
@@ -98,7 +101,7 @@ export class ApplicationList extends Component<Props, State> {
                       icon={<EditIcon />}
                       onClick={() =>
                         this.setState({
-                          deleteApplicationPage: true,
+                          updateApplicationPage: true,
                           selectedApp: app,
                         })
                       }
@@ -134,6 +137,14 @@ export class ApplicationList extends Component<Props, State> {
         {({ applications, refresh }): ReactNode => {
           return (
             <>
+              <UpdateApplicationPage
+                open={this.state.updateApplicationPage}
+                app={this.state.selectedApp}
+                close={() => {
+                  this.setState({ updateApplicationPage: false });
+                  refresh();
+                }}
+              />
               <DeleteApplicationPage
                 open={this.state.deleteApplicationPage}
                 app={this.state.selectedApp}
