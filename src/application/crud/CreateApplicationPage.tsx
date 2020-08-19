@@ -12,10 +12,13 @@ import {
   InputGroup,
   TextInput,
   Title,
-  WizardStep,
 } from '@patternfly/react-core';
 import { UpsClientFactory } from '../../utils/UpsClientFactory';
 import { PushApplication } from '@aerogear/unifiedpush-admin-client';
+import {
+  ApplicationListContext,
+  ContextInterface,
+} from '../../context/Context';
 
 interface State {
   appName: string;
@@ -40,7 +43,7 @@ export class CreateApplicationPage extends Component<Props, State> {
         .execute();
       this.props.onFinished(app);
     } catch (err) {
-      console.log(err);
+      (this.context as ContextInterface).alert(err);
     }
   };
 
@@ -89,3 +92,4 @@ export class CreateApplicationPage extends Component<Props, State> {
     );
   }
 }
+CreateApplicationPage.contextType = ApplicationListContext;

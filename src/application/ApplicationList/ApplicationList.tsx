@@ -20,7 +20,6 @@ import {
 import { DeleteApplicationPage } from '../crud/DeleteApplicationPage';
 import { UpdateApplicationPage } from '../crud/UpdateApplicationPage';
 import { ApplicationListItem } from './ApplicationListItem';
-import { ApplicationDetail } from '../ApplicationDetail/ApplicationDetail';
 
 interface Props {
   apps: PushApplication[];
@@ -66,13 +65,6 @@ export class ApplicationList extends Component<Props, State> {
       this.setState({
         showAppDetailPage: true,
         selectedApp: app,
-      });
-
-    const closeAllDialogs = () =>
-      this.setState({
-        showAppDetailPage: false,
-        deleteApplicationPage: false,
-        updateApplicationPage: false,
       });
 
     return (
@@ -150,13 +142,11 @@ export class ApplicationList extends Component<Props, State> {
                 variant={PaginationVariant.bottom}
                 onNextClick={(_event, currentPage) => {
                   this.setState({ currentPage });
-                  console.log(currentPage);
                   refresh(currentPage - 1);
                 }}
                 onPreviousClick={(_event, currentPage) => {
                   this.setState({ currentPage });
                   refresh(currentPage - 1);
-                  console.log(currentPage);
                 }}
               />
             </>

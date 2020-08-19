@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
 
-import { TextInput, Button, Form, FormGroup } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core';
 import { AndroidVariant, Variant } from '@aerogear/unifiedpush-admin-client';
+import { UPSForm, UPSFormField } from '../ApplicationDetail/panels/UPSForm';
+import {
+  Data,
+  RuleBuilder,
+  Validator,
+  validatorBuilder,
+} from 'json-data-validator';
+import { MultiEvaluationResult } from 'json-data-validator/build/src/Rule';
 
 interface State {
   serverKey: string;
   senderID: string;
+  formValidation?: MultiEvaluationResult | null;
 }
 
 interface Props {
@@ -15,16 +24,57 @@ interface Props {
   close: () => void;
 }
 
+const initialState: State = {
+  serverKey: '',
+  senderID: '',
+  formValidation: null,
+};
+
 export class AndroidVariantForm extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {
-      serverKey: '',
-      senderID: '',
-    };
+    this.state = { ...initialState };
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>) {
+    if (prevProps.open && !this.props.open) {
+      this.setState(initialState);
+    }
   }
 
   render(): React.ReactNode {
+    if (!this.props.open) {
+      return null;
+    }
+
+    const validator: Validator = validatorBuilder()
+      .newRule()
+      .withField('serverKey')
+      .validate(
+        RuleBuilder.matches(
+          '^.{1,255}$',
+          "Field 'Server Key' must be between 1 and 255 characters"
+        )
+      )
+      .validate(
+        RuleBuilder.required()
+          .withErrorMessage("Field 'Server Key' is mandatory")
+          .build()
+      )
+      .withField('senderID')
+      .validate(
+        RuleBuilder.matches(
+          '^.{1,255}$',
+          "Field 'Sender ID' must be between 1 and 255 characters"
+        )
+      )
+      .validate(
+        RuleBuilder.required()
+          .withErrorMessage("Field 'Sender ID' is mandatory")
+          .build()
+      )
+      .build();
+
     const save = () => {
       const variant = {
         name: this.props.variantName,
@@ -35,31 +85,21 @@ export class AndroidVariantForm extends Component<Props, State> {
       this.props.onSave(variant);
     };
 
-    if (!this.props.open) {
-      return null;
-    }
     return (
-      <Form className="AndroidVariantForm">
-        <FormGroup
-          label={'Server Key'}
-          fieldId={'Android-Variant-Form-Server-key'}
-        >
-          <TextInput
-            id="android-serverKey"
-            onChange={value => this.setState({ serverKey: value })}
-            isRequired
-          />
-        </FormGroup>
-        <FormGroup
-          label={'Sender ID'}
-          fieldId={'Android-Variant-Form-Sender-ID'}
-        >
-          <TextInput
-            id="android-senderId"
-            onChange={value => this.setState({ senderID: value })}
-            isRequired
-          />
-        </FormGroup>
+      <UPSForm validator={validator}>
+        <UPSFormField
+          fieldId="serverKey"
+          label={'Push Network'}
+          helperText={'Server Key'}
+          onChange={value => this.setState({ serverKey: value })}
+        />
+
+        <UPSFormField
+          fieldId="senderID"
+          helperText={'Sender ID'}
+          onChange={value => this.setState({ senderID: value })}
+        />
+
         <div className="variantFormButtons">
           <Button
             className="dialogBtn"
@@ -67,10 +107,7 @@ export class AndroidVariantForm extends Component<Props, State> {
             isDisabled={
               !this.props.variantName ||
               this.props.variantName.trim().length === 0 ||
-              !this.state.senderID ||
-              this.state.senderID.trim().length === 0 ||
-              !this.state.serverKey ||
-              this.state.serverKey.trim().length === 0
+              !validator.validate((this.state as unknown) as Data).valid
             }
           >
             Create
@@ -79,7 +116,7 @@ export class AndroidVariantForm extends Component<Props, State> {
             Cancel
           </Button>
         </div>
-      </Form>
+      </UPSForm>
     );
   }
 }
