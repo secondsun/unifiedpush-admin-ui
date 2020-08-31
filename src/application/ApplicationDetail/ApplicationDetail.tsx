@@ -20,6 +20,7 @@ import { SenderAPI } from './SenderAPI';
 import { ApplicationStats } from '../../landing/components/ApplicationStats';
 import { PlusIcon } from '@patternfly/react-icons';
 import { VariantSelectionForm } from '../VariantForms/VariantSelectionForm';
+import { ActivityLogPanel } from './panels/ActivityLogPanel';
 
 interface Props {
   app?: PushApplication;
@@ -126,6 +127,9 @@ export class ApplicationDetail extends Component<Props, State> {
                 </Tab>
                 <Tab eventKey={1} title="Sender API">
                   <SenderAPI app={this.props.app!} />
+                </Tab>
+                <Tab eventKey={2} title="Activity Log">
+                  <ActivityLogPanel app={this.props.app!} />
                 </Tab>
               </Tabs>
             </div>
