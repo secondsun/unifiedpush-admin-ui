@@ -142,9 +142,15 @@ emptyState {
   transition: opacity 0.4s ease-in-out;
 }
 
+
+.pf-c-dropdown__toggle:focus {
+  outline: none;
+}
+
 .varList:hover {
   cursor: pointer;
   .varBtnGroup {
     opacity: 1;
   }
 } 
+
