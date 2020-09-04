@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import '@patternfly/react-core/dist/styles/base.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import {
@@ -17,14 +18,15 @@ import { Header } from './common/Header';
 import { ApplicationListContext, UpsAdminState } from './context/Context';
 import { UpsClientFactory } from './utils/UpsClientFactory';
 
-import './styles/App.scss';
-import { UpsError } from '@aerogear/unifiedpush-admin-client/dist/src/errors/UpsError';
 import { Variant } from '@aerogear/unifiedpush-admin-client';
 import { ApplicationDetail } from './application/ApplicationDetail/ApplicationDetail';
 import { initKeycloak } from './keycloak';
 import { KeycloakTokens, KeycloakProvider } from '@react-keycloak/web';
 import { KeycloakInstance } from 'keycloak-js';
 import { Loading } from './common/Loading';
+
+import { addAlert, removeAlert } from './utils/Alerts';
+import './styles/App.scss';
 
 export class App extends Component<{}, UpsAdminState> {
   private keycloak: KeycloakInstance | null = null;
@@ -36,64 +38,17 @@ export class App extends Component<{}, UpsAdminState> {
       total: 0,
       loading: true,
       refresh: this.refresh,
-      alert: this.alert,
+      alert: (
+        messageOrError: string | Error,
+        details?: string[],
+        type?: AlertVariant
+      ) => addAlert(messageOrError, this, details, type),
       alerts: [],
       selectVariant: this.selectVariant,
       authConfig: {},
+      upsConfig: {},
     };
   }
-
-  private readonly alert = async (
-    messageOrError: string | Error,
-    details?: string[],
-    type?: AlertVariant
-  ): Promise<void> => {
-    if (messageOrError instanceof Error) {
-      if (messageOrError instanceof UpsError) {
-        const error: UpsError = messageOrError;
-        const errorDetails = error.details() ?? {};
-        return this.setState({
-          alerts: [
-            {
-              key: new Date().getTime(),
-              details: Object.keys(errorDetails).map(
-                key => `${key} : ${errorDetails[key]}`
-              ),
-              title: messageOrError.message,
-              variant: AlertVariant.danger,
-            },
-          ],
-        });
-      }
-      return this.setState({
-        alerts: [
-          {
-            key: new Date().getTime(),
-            details: [],
-            title: messageOrError.message,
-            variant: AlertVariant.danger,
-          },
-        ],
-      });
-    }
-
-    return this.setState({
-      alerts: [
-        {
-          key: new Date().getTime(),
-          details: details!,
-          title: messageOrError,
-          variant: type!,
-        },
-      ],
-    });
-  };
-
-  private readonly removeAlert = (key: number) => {
-    this.setState({
-      alerts: [...this.state.alerts.filter(el => el.key !== key)],
-    });
-  };
 
   private readonly selectVariant = async (variant?: Variant) => {
     return this.setState({ selectedVariant: variant });
@@ -101,6 +56,7 @@ export class App extends Component<{}, UpsAdminState> {
 
   private readonly refresh = async (currentPage = 0) => {
     try {
+      await UpsClientFactory.init();
       const searchResults = await UpsClientFactory.getUpsClient()
         .applications.search()
         .page(currentPage)
@@ -112,7 +68,7 @@ export class App extends Component<{}, UpsAdminState> {
         error: undefined,
       });
     } catch (err) {
-      await this.alert(err.message, [], AlertVariant.danger);
+      await this.state.alert(err.message, [], AlertVariant.danger);
       this.setState({
         applications: [],
         loading: false,
@@ -130,6 +86,7 @@ export class App extends Component<{}, UpsAdminState> {
   };
 
   async componentDidMount() {
+    await UpsClientFactory.init();
     const authConfig = await this.loadKeycloakConfig();
 
     if (authConfig['auth-enabled']) {
@@ -137,7 +94,12 @@ export class App extends Component<{}, UpsAdminState> {
     } else {
       this.refresh();
     }
-    this.setState({ authConfig });
+    this.setState({
+      authConfig,
+      upsConfig: await UpsClientFactory.getUpsClient()
+        .config.ui.get()
+        .execute(),
+    });
   }
 
   render1 = (): React.ReactElement => {
@@ -153,7 +115,7 @@ export class App extends Component<{}, UpsAdminState> {
                 <AlertActionCloseButton
                   title={title}
                   variantLabel={`${variant} alert`}
-                  onClose={() => this.removeAlert(key)}
+                  onClose={() => removeAlert(key, this)}
                 />
               }
               key={key}

@@ -21,8 +21,12 @@ import { CodeSnippet } from './CodeSnippet';
 import { snippet as java_snippet } from './snippets/sender/java';
 import { snippet as node_snippet } from './snippets/sender/node';
 import { snippet as curl_snippet } from './snippets/sender/curl';
-import { links } from '../../links';
 import { Secret } from '../../common/Secret';
+import { getLink as _getLink } from '../../utils/DocLinksUtils';
+import {
+  ApplicationListContext,
+  ContextInterface,
+} from '../../context/Context';
 
 interface State {
   refreshSecret: boolean;
@@ -41,6 +45,9 @@ export class SenderAPI extends Component<Props, State> {
   }
 
   readonly render = () => {
+    const context = this.context as ContextInterface;
+    const getLink = (key: string) => _getLink(context.upsConfig, key);
+
     const onRefreshed = (app: PushApplication) => {
       this.props.app.masterSecret = app.masterSecret;
       this.setState({ refreshSecret: false });
@@ -110,7 +117,7 @@ export class SenderAPI extends Component<Props, State> {
             <Text component={'small'}>
               First add{' '}
               <code className={'code'}>unifiedpush-java-client.jar</code> as a{' '}
-              <a href={'links.pushApplications.senderAPI.docs.java_client'}>
+              <a href={getLink('sender-api-java')}>
                 dependency to your Java project
               </a>
               .
@@ -126,13 +133,13 @@ export class SenderAPI extends Component<Props, State> {
             />
             <Text component={'small'}>
               Read more on the details of the{' '}
-              <a href={links.pushApplications.senderAPI.docs.java_client}>
+              <a href={getLink('sender-api-java')}>
                 Java UPS Sender API in documentation
               </a>
               .
               <p>
                 If you have questions about this process,{' '}
-                <a href={'links.pushApplications.senderAPI.docs.java_client'}>
+                <a href={getLink('sender-api-java')}>
                   visit the documentation for full step by step explanation
                 </a>
                 .
@@ -142,9 +149,9 @@ export class SenderAPI extends Component<Props, State> {
           <Tab eventKey={'node-sender-api'} title="Node.js Sender API">
             <Title headingLevel={'h1'}>Set up Node.js Sender API</Title>
             <Text component={'small'}>
-              First add <code className={'code'}>unifiedpush-jnode-sender</code>{' '}
+              First add <code className={'code'}>unifiedpush-node-sender</code>{' '}
               as a{' '}
-              <a href={links.pushApplications.senderAPI.docs.node_client}>
+              <a href={getLink('sender-api-nodejs')}>
                 dependency to your project
               </a>
               .
@@ -160,7 +167,7 @@ export class SenderAPI extends Component<Props, State> {
             />
             <Text component={'small'}>
               Read more on the details of the{' '}
-              <a href={links.pushApplications.senderAPI.docs.node_client}>
+              <a href={getLink('sender-api-nodejs')}>
                 Node.js UPS Sender API in documentation
               </a>
               .
@@ -190,3 +197,4 @@ export class SenderAPI extends Component<Props, State> {
     );
   };
 }
+SenderAPI.contextType = ApplicationListContext;

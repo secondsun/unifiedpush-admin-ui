@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component } from 'react';
 import {
   TextContent,
   Text,
@@ -24,8 +24,7 @@ import { AndroidCodeSnippets } from '../ApplicationDetail/panels/android/Android
 import { WebPushCodeSnippets } from '../ApplicationDetail/panels/web_push/WebPushCodeSnippets';
 import { IOSCertCodeSnippets } from '../ApplicationDetail/panels/ios_cert/iOSCertCodeSnippets';
 import { IOSTokenCodeSnippets } from '../ApplicationDetail/panels/ios_token/iOSTokenCodeSnippets';
-
-interface State {}
+import { getLink as _getLink } from '../../utils/DocLinksUtils';
 
 interface Props {
   app: PushApplication;
@@ -33,13 +32,46 @@ interface Props {
   onFinished: () => void;
 }
 
-export class SetupPage extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {};
-  }
-
+export class SetupPage extends Component<Props> {
   render(): React.ReactNode {
+    const context = this.context as ContextInterface;
+    const getLink = (key: string) => _getLink(context.upsConfig, key);
+
+    const getCodeSnippet = () => {
+      switch (context.selectedVariant?.type) {
+        case 'android':
+          return (
+            <AndroidCodeSnippets
+              app={this.props.app}
+              variant={context.selectedVariant! as AndroidVariant}
+            />
+          );
+        case 'web_push':
+          return (
+            <WebPushCodeSnippets
+              app={this.props.app}
+              variant={context.selectedVariant! as WebPushVariant}
+            />
+          );
+        case 'ios':
+          return (
+            <IOSCertCodeSnippets
+              app={this.props.app}
+              variant={context.selectedVariant! as IOSVariant}
+            />
+          );
+        case 'ios_token':
+          return (
+            <IOSTokenCodeSnippets
+              app={this.props.app}
+              variant={context.selectedVariant! as IOSTokenVariant}
+            />
+          );
+        default:
+          return <></>;
+      }
+    };
+
     return (
       <>
         <Page>
@@ -49,7 +81,7 @@ export class SetupPage extends Component<Props, State> {
               We are half way there! Use the code snippet below to{' '}
               <Text
                 component={TextVariants.a}
-                href="https://aerogear.org/docs/unifiedpush/aerogear-push-android/guides/#_registration_with_the_unifiedpush_server"
+                href={getLink('register-device-android')}
               >
                 {' '}
                 register your device{' '}
@@ -58,7 +90,7 @@ export class SetupPage extends Component<Props, State> {
               Server. If you don't know how to do this, go to the{' '}
               <Text
                 component={TextVariants.a}
-                href="https://aerogear.org/docs/unifiedpush/aerogear-push-android/guides/"
+                href={getLink('step-by-step-android')}
               >
                 documentation for full step by step explanation.
               </Text>
@@ -71,52 +103,15 @@ export class SetupPage extends Component<Props, State> {
               <TextListItem>Click Next(below)</TextListItem>
             </TextList>
           </TextContent>
-          <ApplicationListContext.Consumer>
-            {({ selectedVariant }: ContextInterface): ReactNode => {
-              if (selectedVariant?.type === 'android') {
-                return (
-                  <AndroidCodeSnippets
-                    app={this.props.app}
-                    variant={selectedVariant! as AndroidVariant}
-                  />
-                );
-              }
-              if (selectedVariant?.type === 'web_push') {
-                return (
-                  <WebPushCodeSnippets
-                    app={this.props.app}
-                    variant={selectedVariant! as WebPushVariant}
-                  />
-                );
-              }
-              if (selectedVariant?.type === 'ios') {
-                return (
-                  <IOSCertCodeSnippets
-                    app={this.props.app}
-                    variant={selectedVariant! as IOSVariant}
-                  />
-                );
-              }
-              if (selectedVariant?.type === 'ios_token') {
-                return (
-                  <IOSTokenCodeSnippets
-                    app={this.props.app}
-                    variant={selectedVariant! as IOSTokenVariant}
-                  />
-                );
-              }
-
-              return () => {
-                console.log('missing code snippets');
-              };
-            }}
-          </ApplicationListContext.Consumer>
+          {getCodeSnippet()}
           <TextContent>
             <Text component={TextVariants.p}>
               Next we are going to send a test notification. Make sure you {''}
               <Text
                 component={TextVariants.a}
-                href="https://aerogear.org/docs/unifiedpush/aerogear-push-android/guides/#_handling_notification"
+                href={getLink(
+                  `build-and-deploy-${context.selectedVariant?.type}`
+                )}
               >
                 build or deploy your app
               </Text>
@@ -135,3 +130,4 @@ export class SetupPage extends Component<Props, State> {
     );
   }
 }
+SetupPage.contextType = ApplicationListContext;

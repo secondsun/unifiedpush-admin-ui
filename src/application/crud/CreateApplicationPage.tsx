@@ -19,6 +19,7 @@ import {
   ApplicationListContext,
   ContextInterface,
 } from '../../context/Context';
+import { getLink as _getLink } from '../../utils/DocLinksUtils';
 
 interface State {
   appName: string;
@@ -48,6 +49,9 @@ export class CreateApplicationPage extends Component<Props, State> {
   };
 
   render(): React.ReactNode {
+    const context = this.context as ContextInterface;
+    const getLink = (key: string) => _getLink(context.upsConfig, key);
+
     return (
       <EmptyState variant={EmptyStateVariant.full}>
         <EmptyStateIcon icon={RocketIcon} />
@@ -57,13 +61,7 @@ export class CreateApplicationPage extends Component<Props, State> {
         <EmptyStateBody>
           We will hold your hand and guide you all the way. Sit back and enjoy
           the ride. If you want to read about the process,{' '}
-          <a
-            href={
-              'https://aerogear.org/docs/unifiedpush/ups_userguide/index/#_create_and_manage_pushapplication'
-            }
-          >
-            go to the documentation.
-          </a>
+          <a href={getLink('create-app')}>go to the documentation.</a>
         </EmptyStateBody>
         <Bullseye>
           <Form style={{ width: 350, paddingTop: 20 }}>

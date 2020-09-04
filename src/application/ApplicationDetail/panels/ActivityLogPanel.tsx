@@ -26,6 +26,13 @@ import {
 } from '@patternfly/react-table';
 import { EllipsisText } from '../../../common/EllipsisText';
 import { CodeSnippet } from '../CodeSnippet';
+import { Config, UpsConfig } from '../../../utils/Config';
+import { getLink as _getLink } from '../../../utils/DocLinksUtils';
+import {
+  ApplicationListContext,
+  ContextInterface,
+} from '../../../context/Context';
+import { SenderAPI } from '../SenderAPI';
 
 interface Props {
   app: PushApplication;
@@ -150,8 +157,10 @@ export class ActivityLogPanel extends Component<Props, State> {
   }
 
   render = () => {
+    const context = this.context as ContextInterface;
     const noDevices = this.props.app.metadata!.deviceCount === 0;
     const noMessages = this.state.rows.length === 0;
+    const getLink = (key: string) => _getLink(context.upsConfig, key);
 
     if (noDevices && noMessages) {
       return (
@@ -163,7 +172,7 @@ export class ActivityLogPanel extends Component<Props, State> {
               There are no registered devices for this application.
               <br />
               Check out the documentation on how to get started to{' '}
-              <a href="https://aerogear.org/getstarted/guides/#push">
+              <a href={getLink('docs-push-getting-started')}>
                 register a device
               </a>
               .
@@ -181,7 +190,7 @@ export class ActivityLogPanel extends Component<Props, State> {
               No messages have been sent for this application.
               <br />
               Check out the documentation on how to get started to{' '}
-              <a href="https://aerogear.org/getstarted/guides/#push">
+              <a href={getLink('docs-push-getting-started')}>
                 register a device
               </a>
               .
@@ -238,3 +247,4 @@ export class ActivityLogPanel extends Component<Props, State> {
     }
   };
 }
+ActivityLogPanel.contextType = ApplicationListContext;
